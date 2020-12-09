@@ -4,8 +4,7 @@
 
 
 <h3 align="center">
-This package will help you to create a model,migration,controller,request,resource just by writing the name.
-
+This package will help you to create specific responder for browser,mobile,spa,etc.
 </h3>
 
 
@@ -15,168 +14,128 @@ This package will help you to create a model,migration,controller,request,resour
 You can install the package via composer:
 
 ```bash
-composer require devNajjary/laravel-entity-scaffold
+composer require devNajjary/laravel-multiple-responder
 ```
-
-The default paths are set in config/entity-scaffold.php. Publish the config to copy the file to your own config:
 
 ```bash
-php artisan vendor:publish  --tag="entity-scaffold"
+php artisan responder:generate
 ```
+
+
 ## <g-emoji class="g-emoji" alias="gem" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f48e.png">🤔</g-emoji> How to Use?
 
-
+create your responder:
 ```bash
-php artisan make:entity your_entity
-```
-Suppose our entity is a product:
-
-```bash
-php artisan make:entity product
+php artisan make:responder Mobile
 ```
 after that,it make file in this paths:
-
-Models:
 ```bash
-App/Models/Product/Product.php
+App/Http/Responder/Mobile.php
 ```
-Controllers:
+## <g-emoji class="g-emoji" alias="gem" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f4dd.png">📝</g-emoji> Real use example
+We want to have one output for each mobile, browser and SPA. What to do?<g-emoji class="g-emoji" alias="gem" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/1f48e.png">🤔</g-emoji>
+first create responders like this:
 ```bash
-App/Http/Controllers/ProductsController.php
+php artisan make:responder SPA
+php artisan make:responder Mobile
 ```
-Form Requests:
-```bash
-App/Requests/Product/StoreProduct.php
-```
-Resources:
-```bash
-App/Resources/Product/ProductsResource.php
-App/Resources/Product/ProductsCollection.php
-```
-Migrations:
-```bash
-****_**_**_******_create_products_table
-```
-## <g-emoji class="g-emoji" alias="gear" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2669.png">⚙️</g-emoji>Options
-By entering the command below see options list:
-```bash
-php artisan make:entity --help
-```
-output:
-```bash
-Description:
-  Create (model,migration,controller,request,resource) for your entity.
-
-Usage:
-  make:entity [options] [--] <entity>
-
-Arguments:
-  entity                Name of the entity
-
-Options:
-      --con             Ignore making the controller
-      --mod             Ignore making the model
-      --mig             Ignore making the migration
-      --res             Ignore making the resource
-      --req             Ignore making the request
-  -h, --help            Display this help message
-  -q, --quiet           Do not output any message
-  -V, --version         Display this application version
-      --ansi            Force ANSI output
-      --no-ansi         Disable ANSI output
-  -n, --no-interaction  Do not ask any interactive question
-      --env[=ENV]       The environment the command should run under
-  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
-
-```
-#### how to ignore make Model,controller, etc?
-All you have to do is use the first three letters of each class,eg:
-
-I ignore migration for order entity
-```bash
-$ php artisan make:entity order --mig
---- Controller created  successfully
---- Model created  successfully
- -  -  - Ignore making the migration
---- Request created  successfully
---- Resource created  successfully
-
-```
-
-Now i ignore all except migration
-```bash
-$ php artisan make:entity dart --req --res --con --mod  
- -  -  - Ignore making the controller
- -  -  - Ignore making the model
---- Migration created  successfully
- -  -  - Ignore making the request
- -  -  - Ignore making the resource
-
-``` 
-
-## <g-emoji class="g-emoji" alias="gear" fallback-src="https://github.githubassets.com/images/icons/emoji/unicode/2669.png">⚙️</g-emoji> change default paths
-
-If you change default path.first see `config/entity-scaffold.php` file:
+now go to your controller,Suppose your controller looks like this:
 ```php
-<?php
-return [
+namespace App\Http\Controllers;
 
-
-    /*
-    |--------------------------------------------------------------------------
-    | Controllers Path
-    |--------------------------------------------------------------------------
-    |
-    | Your controller path is located here App/Http/Controllers/{ENTITY_SCAFFOLD_CONTROLLER_PATH}
-    | example:
-    | ENTITY_SCAFFOLD_CONTROLLER_PATH='Admin/'
-    | Don't forget insert "/" to end of Your path.
-    */
-    'controllers_path' => env('ENTITY_SCAFFOLD_CONTROLLER_PATH', '/'),
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Models Path
-    |--------------------------------------------------------------------------
-    |
-    | Your Models Path is located here App/{ENTITY_SCAFFOLD_MODEL_PATH}
-    |
-    */
-    'models_path' => env('ENTITY_SCAFFOLD_MODEL_PATH', 'Models/'),
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Resource Path
-    |--------------------------------------------------------------------------
-    |
-    | Your Resource Path is located here App/Http/Resources/{ENTITY_SCAFFOLD_RESOURCE_PATH}
-    |
-    */
-    'resources_path' => env('ENTITY_SCAFFOLD_RESOURCE_PATH', '/'),
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Requests Path
-    |--------------------------------------------------------------------------
-    |
-    | Your Requests Path is located here App/Http/Requests/{ENTITY_SCAFFOLD_REQUEST_PATH}
-    |
-    */
-    'requests_path' => env('ENTITY_SCAFFOLD_REQUEST_PATH', '/'),
-
-
-];
-
+class YourController extends Controller
+{
+    public function index()
+    {
+        $users = User::all();
+        return view('your-blade-file');
+    }
+}
 ```
-And then change whatever path you want puts its key in  `.env` ‍‍‍file like this:
+Now what if we want to have Jason output for mobile?The answer is this. easily
+rewrite your controller:
+```php
+namespace App\Http\Controllers;
 
-```dotenv
-ENTITY_SCAFFOLD_CONTROLLER_PATH=Admin/Dashboard
-ENTITY_SCAFFOLD_MODEL_PATH=Entity
+use DevNajjary\laravelMultipleResponder\Facade\Responder;
+
+class YourController extends Controller
+{
+    public function index()
+    {
+        $users = User::all();
+        return Responder::showUsers($users);
+    }
+}
 ```
+Now define the user method in any file you want
+default Responder(for browser response):
+```php
+namespace App\Http\Responder;
+
+class DefaultResponder
+{
+ public const HEADER = 'DefaultResponder';
+
+    public function showUsers($users)
+    {
+        return view('your-blade',compact($users));
+    }
+}
+```
+App\Http\Responder\Mobile.php :
+```php
+namespace App\Http\Responder;
+
+class Mobile
+{
+    public const HEADER = 'Mobile';
+
+    public function showUsers($users)
+    {
+        return UserResourse::collection($users);
+    }
+}
+```
+App\Http\Responder\Spa.php
+```php
+namespace App\Http\Responder;
+
+class Spa
+{
+    public const HEADER = 'Spa';
+
+    public function showUsers($users)
+    {
+        return [
+            'users' => UserResourse::collection($users),
+            'additional-data' => 'whatever'
+        ];
+    }
+}
+```
+###What is the use of Header?
+**The point is not to forget that you have to set a const `HEADER` for each Responder**
+All your requests from mobile or spa should be a header with `'Client'` key and `HEADER` value;
+for SPA like this:
+```js
+axios.post('url', {"body":data}, {
+    headers: {
+    'Client': 'Spa'
+    }
+  }
+)
+```
+
+####how to change `'Client'` string ?
+run this
+```bash
+php artisan vendor:publish  --tag="responder"
+```
+And go to `config/responder.php` change `header_key` to What you love.
+
+
+
 ## Credits
 
 - [Mohammad](https://github.com/devNajjary)

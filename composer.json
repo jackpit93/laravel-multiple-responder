@@ -1,6 +1,6 @@
 {
     "name": "devNajjary/laravel-multiple-responder",
-    "description": "separate response from controller to my responder service. ",
+    "description": "separate response from controller to responder service. ",
     "keywords": [
         "response",
         "laravel",
