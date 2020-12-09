@@ -114,7 +114,7 @@ class Spa
     }
 }
 ```
-###What is the use of Header?
+### What is the use of Header?
 **The point is not to forget that you have to set a const `HEADER` for each Responder**
 All your requests from mobile or spa should be a header with `'Client'` key and `HEADER` value;
 for SPA like this:
@@ -127,7 +127,7 @@ axios.post('url', {"body":data}, {
 )
 ```
 
-####how to change `'Client'` string ?
+#### how to change `'Client'` string ?
 run this
 ```bash
 php artisan vendor:publish  --tag="responder"
