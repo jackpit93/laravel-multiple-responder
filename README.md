@@ -14,7 +14,7 @@ This package will help you to create specific responder for browser,mobile,spa,e
 You can install the package via composer:
 
 ```bash
-composer require devNajjary/laravel-multiple-responder
+composer require devnajjary/laravel-multiple-responder
 ```
 
 ```bash
