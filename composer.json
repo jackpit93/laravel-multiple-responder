@@ -1,0 +1,31 @@
+{
+    "name": "devNajjary/laravel-multiple-responder",
+    "description": "separate response from controller to my responder service. ",
+    "keywords": [
+        "response",
+        "laravel",
+        "api"
+    ],
+    "homepage": "https://github.com/devNajjary/laravel-multiple-responder",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "mohammad najjary",
+            "email": "mr.najjary@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "DevNajjary\\laravelMultipleResponder\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DevNajjary\\laravelMultipleResponder\\laravelMultipleResponderServiceProvider"
+            ]
+        }
+    }
+}

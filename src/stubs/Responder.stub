@@ -1,0 +1,8 @@
+<?php
+
+namespace DummyNamespace;
+
+class DummyResponder
+{
+ public const HEADER = 'DummyName';
+}
